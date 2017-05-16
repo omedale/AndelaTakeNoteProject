@@ -14,6 +14,9 @@ var firebase = require('firebase').initializeApp({
       });
 var ref = firebase.database().ref('femiDb/');
 
+// set the port of our application
+// process.env.PORT lets the port be set by Heroku
+var port = process.env.PORT || 8080;
 
 var app = express();
 
@@ -32,7 +35,7 @@ var myNotez = (ref.child('myNote'))
 console.log(myNotez.toString());
 
 myNotez.orderByChild('id').on('child_added', function(snap){
-  console.log(snap.val());
+ // console.log(snap.val());
 })
 
 
@@ -87,9 +90,9 @@ app.post('/loginuser', function(req, res) {
   firebase.auth().signInWithEmailAndPassword(user_email, password) 
   .then(function(user) { 
      res.redirect('/home');
-    console.log("something good");
+   // console.log("something good");
     localStorage.setItem('userAccount', user.email);
-    console.log(localStorage.getItem('userAccount'));
+    //console.log(localStorage.getItem('userAccount'));
     
    })
     .catch(function(error) {
@@ -169,6 +172,6 @@ app.get('/logout', function(req, res) {
 });
 
 
-app.listen(3020);
+app.listen(port);
 
-console.log('we are live');
+ console.log('Our app is running on http://localhost:' + port);
