@@ -16,23 +16,6 @@
 
     <script src="js/jquery.min.js"></script>
 
-    <script>
-      $(document).ready(function(){
-        var user,pass;
-        $("#submit").click(function(){
-          user=$("#user").val();
-          pass=$("#password").val();
-          
-          $.post("http://localhost:3020/loginuser",{user: user,password: pass}, function(data){
-            if(data==='done')
-              {
-                alert("login success");
-              }
-          });
-        });
-      });
-    </script>
-
 
 </head>
 
@@ -52,17 +35,17 @@
             <div class="alert alert-info">
                 Please login with your Email and Password.
             </div>
-    
+             <form method="post" action="/loginuser" >
                 <fieldset>
                     <div class="input-group input-group-lg">
                         <span class="input-group-addon"><i class="glyphicon glyphicon-user red"></i></span>
-                        <input type="email" class="form-control" id="user" name="username" placeholder="Email">
+                        <input type="email" class="form-control" id="user" name="email" placeholder="Email">
                     </div>
                     <div class="clearfix"></div><br>
 
                     <div class="input-group input-group-lg">
                         <span class="input-group-addon"><i class="glyphicon glyphicon-lock red"></i></span>
-                        <input type="password" class="form-control" id="password"  placeholder="Password">
+                        <input type="password" class="form-control" name="password" id="password"  placeholder="Password">
                     </div>
                     <div class="clearfix"></div>
 
@@ -72,9 +55,12 @@
                     <div class="clearfix"></div>
 
                     <p class="center col-md-5">
-                        <input type="button" class="btn btn-primary" id="submit" value="Login" />
+                        <input type="submit" class="btn btn-primary" id="submit" value="Login" />
                     </p>
                 </fieldset>
+                 <div class="input-prepend">
+                        <a href="/signup"> Create an account</a>
+                    </div>
             </form>
         </div>
         <!--/span-->

@@ -17,6 +17,23 @@
 
     <script src="js/jquery.min.js"></script>
 
+    <script>
+      $(document).ready(function(){
+        var user,pass;
+        $("#submit").click(function(){
+          title=$("#title").val();
+          note=$("#note").val();
+          
+          $.post("http://localhost:3020/addnoteNewNote",{title: title, note: note}, function(data){
+            if(data==='done')
+              {
+                alert("login success");
+              }
+          });
+        });
+      });
+    </script>
+
 
 </head>
 
@@ -52,24 +69,35 @@
 <div class="ch-container">
     <div class="row">
 
+            
 <div class="row">
     <div class="box col-md-12">
-      <form>      
+       <form method="post" action="/addnoteNewNote" >
             <div class="box-content">
                     <div class="paper">
                     <div class="paper-content">
-                        <input class="titu" type="text" placeholder="Note Title"></input>
-                        <textarea ng-model="detail.note"  placeholder="Type your note here"></textarea>
+                        <input name="title" class="titu" type="text" id="title" placeholder="Note Title"></input>
+                        <textarea name="note" ng-model="detail.note" id="note"  placeholder="Type your note here"></textarea>
                     </div>
                     </div>
             </div>
+            <button class="plusfab" id="submit" href="/addnote" style="border: 1px solid #29a1e7; font-size: 35px; border-radius: 46%; background-color: #29a1e7;" class="btn"><i style="font-size:smaller; color: white;     margin: 25%;" class="glyphicon glyphicon-check"></i></button>
+            
         </form>
         
     </div>
-           <a class="plusfab" href="/addnote" style="border: 1px solid #29a1e7; font-size: 35px; border-radius: 46%; background-color: #29a1e7;" class="btn"><i style="font-size:smaller; color: white;     margin: 25%;" class="glyphicon glyphicon-check"></i></a>            
         
 </div><!--/row-->
 </div><!--/fluid-row-->
+<!--<% if (typeof errors != 'undefined') { %>
+<ul>
+    <% for (error in errors) { %>
+        <li>
+           <%= error.msg %>
+        </li>
+    <% } %>
+</ul>
+<% } %>-->
 
 </div><!--/.fluid-container-->
 
