@@ -12,10 +12,11 @@ var firebase = require('firebase').initializeApp({
 		    storageBucket: "andela-83b71.appspot.com",
 		    messagingSenderId: "632055894361"
       });
+var ref = firebase.database().ref('femiDb/');
 
 
 var app = express();
-let neval = "";
+
 app.use(express.static(__dirname + '/public'));
   
 app.set('view engine', 'ejs');
@@ -27,13 +28,16 @@ if (typeof localStorage === "undefined" || localStorage === null) {
   localStorage = new LocalStorage('./scratch');
 }
 
+var myNotez = (ref.child('myNote'))
+console.log(myNotez.toString());
+
+myNotez.orderByChild('id').on('child_added', function(snap){
+  console.log(snap.val());
+})
 
 
-// index page 
 app.get('/', function(req, res) {
-	
     var tagline = "TakeNotez";
-
     res.render('pages/home', {
         tagline: tagline
     })
@@ -56,7 +60,7 @@ app.get('/home', function(req, res) {
 });
 
 app.post('/addnoteNewNote', function(req, res, next) {
- req.checkBody('title', 'Invalid postparam').notEmpty().isInt();
+ req.checkBody('title', 'Invalid postparam').notEmpty();
   var errors = req.validationErrors();
   if (errors) {
     res.send(errors);
@@ -66,6 +70,10 @@ app.post('/addnoteNewNote', function(req, res, next) {
   var note=req.body.note;
   console.log(note);
   console.log(title);
+ let d = new Date();
+ let id = d.getFullYear().toString() + d.getMonth().toString()  + d.getDay().toString()  + d.getHours().toString()  + d.getHours().toString()  + d.getMinutes().toString()  + d.getSeconds().toString() ;
+var notez = {title: title, note: note, time: new Date().toString(), id: id, email: localStorage.getItem('userAccount')  };
+ref.child("myNote").push(notez);
   res.redirect('home');
   }
 
@@ -144,6 +152,9 @@ app.get('/addnote', function(req, res) {
        res.redirect('/logout')
   }
 });
+
+
+
 
 
 app.get('/logout', function(req, res) {

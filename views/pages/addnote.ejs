@@ -17,22 +17,7 @@
 
     <script src="js/jquery.min.js"></script>
 
-    <script>
-      $(document).ready(function(){
-        var user,pass;
-        $("#submit").click(function(){
-          title=$("#title").val();
-          note=$("#note").val();
-          
-          $.post("http://localhost:3020/addnoteNewNote",{title: title, note: note}, function(data){
-            if(data==='done')
-              {
-                alert("login success");
-              }
-          });
-        });
-      });
-    </script>
+    
 
 
 </head>
@@ -81,7 +66,7 @@
                     </div>
                     </div>
             </div>
-            <button class="plusfab" id="submit" href="/addnote" style="border: 1px solid #29a1e7; font-size: 35px; border-radius: 46%; background-color: #29a1e7;" class="btn"><i style="font-size:smaller; color: white;     margin: 25%;" class="glyphicon glyphicon-check"></i></button>
+            <button class="plusfab" id="submit" href="/createNote" style="border: 1px solid #29a1e7; font-size: 35px; border-radius: 46%; background-color: #29a1e7;" class="btn"><i style="font-size:smaller; color: white;     margin: 21%;" class="glyphicon glyphicon-check"></i></button>
             
         </form>
         
