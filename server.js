@@ -28,7 +28,7 @@ app.use(expressValidator());
 if (typeof localStorage === "undefined" || localStorage === null) {
   localStorage = new LocalStorage('./scratch');
 }
-
+let know = "";
 // var myNotez = (ref.child('myNote'))
 // console.log(myNotez.toString());
 
@@ -39,8 +39,10 @@ if (typeof localStorage === "undefined" || localStorage === null) {
 
 app.get('/', function(req, res) {
     var tagline = "TakeNotez";
+    note="";
     res.render('pages/home', {
-        tagline: tagline
+        tagline: tagline,
+        port:port
     })
 });
 
@@ -50,9 +52,10 @@ app.get('/signup', function(req, res) {
 });
 
 app.get('/home', function(req, res) {
-  
+  note ="";
   if (localStorage.getItem('userAccount') != "") {
-       res.render('pages/home',{  	   
+       res.render('pages/home',{ 
+         port:port 	   
     });
   } else {
        res.redirect('/logout')
@@ -61,23 +64,20 @@ app.get('/home', function(req, res) {
 });
 
 app.post('/addnoteNewNote', function(req, res, next) {
-  if(req.body.title === ""){
+  if(req.body.note === ""){
     return;
   }else{
-       req.checkBody('title', 'Invalid postparam').notEmpty();
   var errors = req.validationErrors();
   if (errors) {
     res.send(errors);
     return;
   } else {
-  var title=req.body.title;
   var note=req.body.note;
   console.log(note);
-  console.log(title);
   var ref = firebase.database().ref('myNote');
  let d = new Date();
  let id = d.getFullYear().toString() + d.getMonth().toString()  + d.getDay().toString()  + d.getHours().toString()  + d.getHours().toString()  + d.getMinutes().toString()  + d.getSeconds().toString() ;
-var notez = {title: title, note: note, time: new Date().toString(), id: id, email: localStorage.getItem('userAccount')  };
+var notez = { note: note, time: new Date().toString(), id: id, email: localStorage.getItem('userAccount')  };
  ref.push(notez);
   res.redirect('home');
   }
@@ -86,8 +86,45 @@ var notez = {title: title, note: note, time: new Date().toString(), id: id, emai
 
 });
 
-app.post('/loginuser', function(req, res) {
 
+app.post('/editNote', function(req, res, next) {
+ 
+  if(req.body.note === ""){
+    return;
+  }else{
+  var errors = req.validationErrors();
+  if (errors) {
+
+    res.send(errors);
+    return;
+  } 
+  else {
+
+  var note=req.body.note;
+  console.log(note);
+  var ref = firebase.database().ref('myNote');
+ let d = new Date();
+ let id = d.getFullYear().toString() + d.getMonth().toString()  + d.getDay().toString()  + d.getHours().toString()  + d.getHours().toString()  + d.getMinutes().toString()  + d.getSeconds().toString() ;
+ var notez = { note: note, time: new Date().toString(), id: id, email: localStorage.getItem('userAccount')  };
+ console.log(note);
+ var updateDis = ref.child(localStorage.getItem('noteid'));
+ updateDis.set(notez);
+ res.redirect('home');
+  }
+  }
+
+
+});
+
+
+app.post('/viewnote', (req, res) => {
+localStorage.setItem('noteid', req.body.noteid);
+  res.render('pages/viewnote', {
+  })
+})
+
+
+app.post('/loginuser', function(req, res) {
   var user_email=req.body.email;
   var password=req.body.password;
 

@@ -56,22 +56,22 @@
     <!-- topbar ends -->
 <div class="ch-container">
     <div class="">
-
 <div class="" ng-app="noteApp" ng-controller="mainController">
     <div class="box col-md-12">
-        <div class="innar">
-            
+        <div class="innar">        
             <div class="row" id="notecontainer" style="margin-left: 3%;">
-                <div class="note col-sm-3" ng-repeat="note in notes">
-			         <a href="javascript:;" ng-click="removeNote($index, note)" class="button remove">X</a>
-                     <a href="/addnote">
+                <div class=" col-sm-3" ng-repeat="note in notes | orderBy: '-id'">
+                  <form method="post" action="/viewnote">
+                  <input type="hidden" id="noteid" name="noteid" value="{{note.$id}}">
+                        <input type="hidden" id="note" name="note" value="{{note.note}}">
+			         <button ng-click="viewNote($index, note)" style="  border: 1px solid #fb5fbd;" class="note" type="submit">
+                        <a href="javascript:;" ng-click="removeNote($index, note)" class="button remove">X</a>                   
 				        <div class="note_cnt">
-			            <h3 class="title sticttext" >Title</h3>
-				        <p class="cnt sticttext" > {{ note.title }}</p>
+			            <h3 class="title sticttext"  style="background: #fb5fbd;">{{ note.note | limitTo: 10 }}</h3>			        
 				        </div>
-                     </a>
+                     </button>                    
+                      </form>
 				 </div>
-
             </div>
         <a class="plusfab" href="/addnote" style="z-index: 2000; border: 1px solid #29a1e7; font-size: 35px; border-radius: 46%; background-color: #29a1e7;" class="btn"><i style="font-size:smaller; color: white;     margin: 25%;" class="glyphicon glyphicon-plus"></i></a>            
         </div>
