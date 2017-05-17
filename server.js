@@ -2,7 +2,12 @@
 var express = require('express');
 var expressValidator = require('express-validator');
 var cookieParser = require('cookie-parser');
+var session      = require('express-session');
+var expressMessages      = require('express-messages');
+var cookieParser = require('cookie-parser');
+var jsonfile = require('jsonfile')
 const bodyParser= require('body-parser');
+var flash = require('connect-flash');
 var LocalStorage = require('node-localstorage').LocalStorage;
 var firebase = require('firebase').initializeApp({
 			apiKey: "AIzaSyAqu8jyV5ECKD_Bhd-Be6mbvUYnTZ0cWA0",
@@ -18,12 +23,27 @@ var port = process.env.PORT || 8080;
 
 var app = express();
 
+app.use(require('connect-flash')());
+app.use(function (req, res, next) {
+  res.locals.messages = require('express-messages')(req, res);
+  next();
+});
+
 app.use(express.static(__dirname + '/public'));
-  
+  var sessionStore = new session.MemoryStore;
 app.set('view engine', 'ejs');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(expressValidator()); 
+app.use(expressValidator());
+app.use(cookieParser('secret'));
+app.use(session({
+    cookie: { maxAge: 60000 },
+    store: sessionStore,
+    saveUninitialized: true,
+    resave: 'true',
+    secret: 'secret'
+}));
+app.use(flash());
 
 if (typeof localStorage === "undefined" || localStorage === null) {
   localStorage = new LocalStorage('./scratch');
@@ -36,13 +56,12 @@ let know = "";
 //  // console.log(snap.val());
 // })
 
-
+ 
 app.get('/', function(req, res) {
     var tagline = "TakeNotez";
     note="";
-    res.render('pages/home', {
-        tagline: tagline,
-        port:port
+    res.render('pages/login', {
+
     })
 });
 
@@ -64,63 +83,82 @@ app.get('/home', function(req, res) {
 });
 
 app.post('/addnoteNewNote', function(req, res, next) {
-  if(req.body.note === ""){
-    return;
-  }else{
-  var errors = req.validationErrors();
-  if (errors) {
-    res.send(errors);
-    return;
+
+    if (localStorage.getItem('userAccount') != "") {
+        if(req.body.note === ""){
+            return;
+          }else{
+          var errors = req.validationErrors();
+          if (errors) {
+            res.send(errors);
+            return;
+          } else {
+          var note=req.body.note;
+          console.log(note);
+          var ref = firebase.database().ref('myNote');
+        let d = new Date();
+        let id = d.getFullYear().toString() + d.getMonth().toString()  + d.getDay().toString()  + d.getHours().toString()  + d.getHours().toString()  + d.getMinutes().toString()  + d.getSeconds().toString() ;
+        var notez = { note: note, time: new Date().toString(), id: id, email: localStorage.getItem('userAccount')  };
+        ref.push(notez);
+          res.redirect('home');
+          }
+        }
   } else {
-  var note=req.body.note;
-  console.log(note);
-  var ref = firebase.database().ref('myNote');
- let d = new Date();
- let id = d.getFullYear().toString() + d.getMonth().toString()  + d.getDay().toString()  + d.getHours().toString()  + d.getHours().toString()  + d.getMinutes().toString()  + d.getSeconds().toString() ;
-var notez = { note: note, time: new Date().toString(), id: id, email: localStorage.getItem('userAccount')  };
- ref.push(notez);
-  res.redirect('home');
+       res.redirect('/logout')
   }
-  }
+
+
 
 
 });
 
 
 app.post('/editNote', function(req, res, next) {
- 
-  if(req.body.note === ""){
+
+    if (localStorage.getItem('userAccount') != "") {
+    if(req.body.note === ""){
     return;
   }else{
-  var errors = req.validationErrors();
-  if (errors) {
+          var errors = req.validationErrors();
+          if (errors) {
 
-    res.send(errors);
-    return;
-  } 
-  else {
+            res.send(errors);
+            return;
+          } 
+          else {
 
-  var note=req.body.note;
-  console.log(note);
-  var ref = firebase.database().ref('myNote');
- let d = new Date();
- let id = d.getFullYear().toString() + d.getMonth().toString()  + d.getDay().toString()  + d.getHours().toString()  + d.getHours().toString()  + d.getMinutes().toString()  + d.getSeconds().toString() ;
- var notez = { note: note, time: new Date().toString(), id: id, email: localStorage.getItem('userAccount')  };
- console.log(note);
- var updateDis = ref.child(localStorage.getItem('noteid'));
- updateDis.set(notez);
- res.redirect('home');
+          var note=req.body.note;
+          console.log(note);
+          var ref = firebase.database().ref('myNote');
+        let d = new Date();
+        let id = d.getFullYear().toString() + d.getMonth().toString()  + d.getDay().toString()  + d.getHours().toString()  + d.getHours().toString()  + d.getMinutes().toString()  + d.getSeconds().toString() ;
+        var notez = { note: note, time: new Date().toString(), id: id, email: localStorage.getItem('userAccount')  };
+        console.log(note);
+        var updateDis = ref.child(localStorage.getItem('noteid'));
+        updateDis.set(notez);
+        res.redirect('home');
+          }
+          }
+  } else {
+       res.redirect('/logout')
   }
-  }
+ 
+  
 
 
 });
 
 
 app.post('/viewnote', (req, res) => {
-localStorage.setItem('noteid', req.body.noteid);
-  res.render('pages/viewnote', {
-  })
+
+    if (localStorage.getItem('userAccount') != "") {
+        localStorage.setItem('noteid', req.body.noteid);
+    res.render('pages/viewnote', {
+    })
+  } else {
+       res.redirect('/logout')
+  }
+
 })
 
 
@@ -130,25 +168,19 @@ app.post('/loginuser', function(req, res) {
 
   firebase.auth().signInWithEmailAndPassword(user_email, password) 
   .then(function(user) { 
-     res.redirect('/home');
-   // console.log("something good");
+
     localStorage.setItem('userAccount', user.email);
-    //console.log(localStorage.getItem('userAccount'));
-    
+     res.redirect('/home');
    })
     .catch(function(error) {
+      
       // Handle Errors here.
       var errorCode = error.code;
       var errorMessage = error.message;
-      if (errorCode === 'auth/wrong-password') {
-       console.log("Wrong password ");
-       return;
-      } else {
+       req.flash("info", errorMessage);
+          res.redirect('/login');
          console.log(errorMessage);
          return;
-      }
-      console.log(error);
-      return;
     });
 
   console.log("User name = "+user_email+", password is "+password);
@@ -167,15 +199,14 @@ app.post('/signupuser', function(req, res) {
     
    })
     .catch(function(error) {
-      // Handle Errors here.
+
       var errorCode = error.code;
       var errorMessage = error.message;
-      if (errorCode === 'auth/wrong-password') {
-       console.log("Wrong password ");
-      } else {
-         console.log(errorMessage);
-      }
+      req.flash("info", errorMessage);
       console.log(error);
+      res.redirect('/signup');
+      return;
+      
     });
     
 });
@@ -185,6 +216,17 @@ app.post('/signupuser', function(req, res) {
 app.get('/login', function(req, res) {
     res.render('pages/login',{
     });
+});
+
+app.get('/downloadjson', function(req, res) {
+  console.log(localStorage.getItem('noteid'));
+  var file = '/tmp/data.json'
+  var obj = {name: 'JP'}
+  
+  jsonfile.writeFile(file, obj, {spaces: 2}, function(err) {
+  console.error(err)
+})
+   res.redirect('/home');
 });
 
 app.get('/addnote', function(req, res) {

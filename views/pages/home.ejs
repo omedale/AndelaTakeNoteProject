@@ -40,7 +40,7 @@
             <!-- user dropdown starts -->
             <div class="btn-group pull-right">
                 <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                    <i class="glyphicon glyphicon-user"></i><span class="hidden-sm hidden-xs"> admin</span>
+                    <i class="glyphicon glyphicon-user"></i><span class="hidden-sm hidden-xs"> Account</span>
                     <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu">
@@ -60,12 +60,13 @@
     <div class="box col-md-12">
         <div class="innar">        
             <div class="row" id="notecontainer" style="margin-left: 3%;">
-                <div class=" col-sm-3" ng-repeat="note in notes | orderBy: '-id'">
+                <div class=" col-sm-3" style="    width: inherit;" ng-repeat="note in notes | orderBy: '-id'">
                   <form method="post" action="/viewnote">
                   <input type="hidden" id="noteid" name="noteid" value="{{note.$id}}">
-                        <input type="hidden" id="note" name="note" value="{{note.note}}">
-			         <button ng-click="viewNote($index, note)" style="  border: 1px solid #fb5fbd;" class="note" type="submit">
-                        <a href="javascript:;" ng-click="removeNote($index, note)" class="button remove">X</a>                   
+                     <input type="hidden" id="note" name="note" value="{{note.note}}">
+			         <button ng-click="viewNote($index, note)" style="border: 1px solid #fb5fbd;" class="note" type="submit">
+                          <a href="/home"  style="right: 155px;" class="button remove"><i  class="glyphicon glyphicon-share"></i></a> 
+                        <a  ng-click="removeNote($index, note)" class="button remove">X</a>                   
 				        <div class="note_cnt">
 			            <h3 class="title sticttext"  style="background: #fb5fbd;">{{ note.note | limitTo: 10 }}</h3>			        
 				        </div>

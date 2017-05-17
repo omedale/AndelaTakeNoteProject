@@ -18,7 +18,9 @@ angular.module('noteApp', ['firebase'])
 
         $scope.allNotes = []
          firebase.initializeApp(firebaseConfig );
-          var ref = firebase.database().ref().child('myNote'); 
+        //var ref = firebase.database().ref().child('myNote'); 
+      var ref = firebase.database().ref().child('myNote').orderByChild('email').equalTo(localStorage.getItem('email')); 
+        
            $scope.notes = $firebaseArray(ref);
            console.log( $scope.notes);
 
@@ -68,6 +70,20 @@ angular.module('noteApp', ['firebase'])
 
 
     
+  
+})
+
+
+.controller('loginController', function($scope, $firebase, $rootScope, $firebaseArray, $firebaseObject, $timeout) {
+               
+                $scope.userEmail = "";
+                 $scope.setEmail = function () { 
+                    // alert($scope.userEmail );            
+                 localStorage.setItem('email', $scope.userEmail );
+                //console.log(localStorage.getItem('email')); 
+        };
+
+              //var testNote = JSON.parse(localStorage.getItem('todos'));    
   
 });
 
