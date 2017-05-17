@@ -12,10 +12,8 @@ var firebase = require('firebase').initializeApp({
 		    storageBucket: "andela-83b71.appspot.com",
 		    messagingSenderId: "632055894361"
       });
-var ref = firebase.database().ref('femiDb/');
 
-// set the port of our application
-// process.env.PORT lets the port be set by Heroku
+
 var port = process.env.PORT || 8080;
 
 var app = express();
@@ -31,12 +29,12 @@ if (typeof localStorage === "undefined" || localStorage === null) {
   localStorage = new LocalStorage('./scratch');
 }
 
-var myNotez = (ref.child('myNote'))
-console.log(myNotez.toString());
+// var myNotez = (ref.child('myNote'))
+// console.log(myNotez.toString());
 
-myNotez.orderByChild('id').on('child_added', function(snap){
- // console.log(snap.val());
-})
+// myNotez.orderByChild('id').on('child_added', function(snap){
+//  // console.log(snap.val());
+// })
 
 
 app.get('/', function(req, res) {
@@ -63,7 +61,10 @@ app.get('/home', function(req, res) {
 });
 
 app.post('/addnoteNewNote', function(req, res, next) {
- req.checkBody('title', 'Invalid postparam').notEmpty();
+  if(req.body.title === ""){
+    return;
+  }else{
+       req.checkBody('title', 'Invalid postparam').notEmpty();
   var errors = req.validationErrors();
   if (errors) {
     res.send(errors);
@@ -73,12 +74,15 @@ app.post('/addnoteNewNote', function(req, res, next) {
   var note=req.body.note;
   console.log(note);
   console.log(title);
+  var ref = firebase.database().ref('myNote');
  let d = new Date();
  let id = d.getFullYear().toString() + d.getMonth().toString()  + d.getDay().toString()  + d.getHours().toString()  + d.getHours().toString()  + d.getMinutes().toString()  + d.getSeconds().toString() ;
 var notez = {title: title, note: note, time: new Date().toString(), id: id, email: localStorage.getItem('userAccount')  };
-ref.child("myNote").push(notez);
+ ref.push(notez);
   res.redirect('home');
   }
+  }
+
 
 });
 
