@@ -11,13 +11,13 @@
     <link id="bs-css" href="css/bootstrap-cerulean.min.css" rel="stylesheet">
 
     <link href="css/charisma-app.css" rel="stylesheet">
-    
+
     <link href='css/bootstrap-tour.min.css' rel='stylesheet'>
     <link href='css/style.css' rel='stylesheet'>
 
     <script src="js/jquery.min.js"></script>
 
-    
+
 
 
 </head>
@@ -33,7 +33,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="/home"> 
+            <a class="navbar-brand" href="/home">
                 <span>Home</span></a>
 
             <!-- user dropdown starts -->
@@ -43,7 +43,7 @@
                     <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu">
-                   
+
                     <li><a href="/logout">Logout</a></li>
                 </ul>
             </div>
@@ -51,10 +51,13 @@
         </div>
     </div>
     <!-- topbar ends -->
+    <div class="container">
+        <% if (messages) { %>
+                <span style="color:red; font-size: 15px;">   <%- messages() %> </span>
+            <% } %>
+    </div>
 <div class="ch-container">
     <div class="row">
-
-            
 <div class="row">
     <div class="box col-md-12">
        <form method="post" action="/addnoteNewNote" >
@@ -66,11 +69,11 @@
                     </div>
             </div>
             <button class="plusfab" id="submit" style="border: 1px solid #29a1e7; font-size: 35px; border-radius: 46%; background-color: #29a1e7;" class="btn"><i style="font-size:smaller; color: white;     margin: 21%;" class="glyphicon glyphicon-check"></i></button>
-            
+
         </form>
-        
+
     </div>
-        
+
 </div><!--/row-->
 </div><!--/fluid-row-->
 <!--<% if (typeof errors != 'undefined') { %>
