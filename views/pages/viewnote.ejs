@@ -22,7 +22,6 @@
     <script src="/js/jquery.min.js"></script>
 
 
-
 </head>
 
 <body ng-app="noteApp" ng-controller="noteController">
@@ -54,6 +53,25 @@
         </div>
     </div>
     <!-- topbar ends -->
+     <div class="row">
+         <div class="col-sm-6">
+        <% if (messages) { %>
+                <span style="color:red; font-size: 15px;">   <%- messages() %> </span>
+            <% } %>
+        </div>
+
+        <div class="col-sm-6">
+        <div class="row" >
+            <div class="col-sm-6">
+
+            </div>
+
+            <div class="col-sm-6">
+             <a href="/tmp" style="  position: fixed;   left: 82%;  top:85px;    margin-left: -28px;   background-color: #42ace9; color: white; margin-top: -19px" class="btn"><i style="font-size:smaller; color: white; padding: 4px;" class="glyphicon glyphicon-download"></i>Download JSON</a>
+             </div>
+        </div>
+        </div>
+    </div>
 <div class="ch-container">
     <div class="row">
 
@@ -64,13 +82,11 @@
             <div class="box-content">
                     <div class="paper">
                     <div class="paper-content">
-                        <textarea name="note" ng-model="getnote"  id="note"  placeholder="Type your note here"></textarea>
+                        <textarea name="note" id="note" ng-model="getnote"  id="note"  placeholder="Type your note here"></textarea>
                     </div>
                     </div>
             </div>
-              <a class="plusfab" href="/downloadjson" style="border: 1px solid #29a1e7; font-size: 35px; border-radius: 46%; background-color: #29a1e7; left: 8%;" class="btn"><i style="font-size:smaller; color: white;     margin: 21%;" class="glyphicon glyphicon-download"></i></a>
-             <button class="plusfab" id="submit" style="border: 1px solid #29a1e7; font-size: 35px; border-radius: 46%; background-color: #29a1e7;" class="btn"><i style="font-size:smaller; color: white;     margin: 21%;" class="glyphicon glyphicon-check"></i></button>
-
+            <button class="plusfab" id="submit" style="border: 1px solid #29a1e7; font-size: 35px; border-radius: 46%; background-color: #29a1e7;" class="btn"><i style="font-size:smaller; color: white;     margin: 21%;" class="glyphicon glyphicon-check"></i></button>
         </form>
 
     </div>

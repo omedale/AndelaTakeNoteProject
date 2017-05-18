@@ -8,6 +8,8 @@
   var jsonfile = require('jsonfile')
   const bodyParser= require('body-parser');
   var flash = require('connect-flash');
+  var jsonfile = require('jsonfile');
+
   var LocalStorage = require('node-localstorage').LocalStorage;
   var firebase = require('firebase').initializeApp({
    apiKey: "AIzaSyAqu8jyV5ECKD_Bhd-Be6mbvUYnTZ0cWA0",
@@ -17,6 +19,7 @@
    storageBucket: "andela-83b71.appspot.com",
    messagingSenderId: "632055894361"
   });
+
 
 
   var port = process.env.PORT || 8080;
@@ -48,13 +51,6 @@
   if (typeof localStorage === "undefined" || localStorage === null) {
     localStorage = new LocalStorage('./scratch');
   }
-  let know = "";
-  // var myNotez = (ref.child('myNote'))
-  // console.log(myNotez.toString());
-
-  // myNotez.orderByChild('id').on('child_added', function(snap){
-  //  // console.log(snap.val());
-  // })
 
 
   app.get('/', function(req, res) {
@@ -66,6 +62,34 @@
      res.redirect('/login')
    }
   });
+
+  app.get('/tmp', function(req, res) {
+    if (localStorage.getItem('userAccount') != "") {
+      res.download('tmp/data.json')
+
+    } else {
+     res.redirect('/login')
+   }
+  });
+
+  app.post('/downloadjson', function(req, res, next) {
+    if (localStorage.getItem('userAccount') != "") {
+      let note = req.body.note;
+      var pat = __dirname;
+      var file = pat+'/tmp/data.json'
+      var obj = {note: note}
+      jsonfile.writeFile(file, obj, {spaces: 2}, function(err) {
+        next()
+      })
+    } else {
+     res.redirect('/login')
+   }
+   next()
+  }
+  )
+
+
+
 
   app.get('/signup', function(req, res) {
     res.render('pages/signup',{
@@ -87,36 +111,36 @@
 
   app.post('/addnoteNewNote', function(req, res, next) {
 
+
+
     if (localStorage.getItem('userAccount') != "") {
       if(req.body.note === ""){
-         req.flash("info", "Blank note not saved");
-          res.redirect('/addnote');
+       req.flash("info", "Blank note not saved");
+       res.redirect('/addnote');
+       return;
+     }else{
+      var errors = req.validationErrors();
+      if (errors) {
+        req.flash("info", errors);
+        res.redirect('/addnote');
+      } else {
+
+        var note=req.body.note;
+        console.log(note);
+        var ref = firebase.database().ref('myNote');
+        let d = new Date();
+        let id = d.getFullYear().toString() + d.getMonth().toString()  + d.getDate().toString()  + d.getHours().toString()  + d.getHours().toString()  + d.getMinutes().toString()  + d.getSeconds().toString() ;
+        var notez = { note: note, time: new Date().toString(), id: id, email: localStorage.getItem('userAccount')  };
+        ref.push(notez);
+        res.redirect('home');
         return;
-      }else{
-        var errors = req.validationErrors();
-        if (errors) {
-          req.flash("info", errors);
-          res.redirect('/addnote');
-        } else {
-
-          var note=req.body.note;
-          console.log(note);
-          var ref = firebase.database().ref('myNote');
-          let d = new Date();
-          //  console.log(d.getMonth().toString());
-          //  console.log(d.getDate().toString() );
-          let id = d.getFullYear().toString() + d.getMonth().toString()  + d.getDate().toString()  + d.getHours().toString()  + d.getHours().toString()  + d.getMinutes().toString()  + d.getSeconds().toString() ;
-          var notez = { note: note, time: new Date().toString(), id: id, email: localStorage.getItem('userAccount')  };
-          ref.push(notez);
-          res.redirect('home');
-          return;
-        }
       }
+    }
 
 
-    } else {
-     res.redirect('/login')
-   }
+  } else {
+   res.redirect('/login')
+  }
 
 
 
@@ -164,6 +188,11 @@
 
     if (localStorage.getItem('userAccount') != "") {
       localStorage.setItem('noteid', req.body.noteid);
+      var pat = __dirname;
+      var file = pat+'/tmp/data.json'
+      var obj = {note: req.body.note}
+      jsonfile.writeFile(file, obj, {spaces: 2}, function(err) {
+      })
       res.render('pages/viewnote', {
         email: localStorage.getItem('userAccount')
       })
@@ -185,20 +214,14 @@
       res.redirect('/home');
     })
     .catch(function(error) {
+      var errorCode = error.code;
+      var errorMessage = error.message;
+      req.flash("info", errorMessage);
+      res.redirect('/login');
+      console.log(errorMessage);
+      return;
+    });
 
-        // Handle Errors here.
-        var errorCode = error.code;
-        var errorMessage = error.message;
-        req.flash("info", errorMessage);
-        res.redirect('/login');
-        console.log(errorMessage);
-        return;
-      });
-
-    console.log("User name = "+user_email+", password is "+password);
-    // res.redirect('/home');
-    //res.end("yes");
-    //res.render('pages/home');
   });
 
   app.post('/signupuser', function(req, res) {
@@ -230,19 +253,8 @@
     });
   });
 
-  app.get('/downloadjson', function(req, res) {
-    console.log(localStorage.getItem('noteid'));
-    var file = '/tmp/data.json'
-    var obj = {name: 'JP'}
-
-    jsonfile.writeFile(file, obj, {spaces: 2}, function(err) {
-      console.error(err)
-    })
-    res.redirect('/home');
-  });
 
   app.get('/addnote', function(req, res) {
-
     if (localStorage.getItem('userAccount') != "") {
       res.render('pages/addnote',{
         email: localStorage.getItem('userAccount')
@@ -269,5 +281,3 @@
 
 
   app.listen(port);
-
-  console.log('Our app is running on http://localhost:' + port);
