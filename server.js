@@ -165,6 +165,7 @@
     if (localStorage.getItem('userAccount') != "") {
       localStorage.setItem('noteid', req.body.noteid);
       res.render('pages/viewnote', {
+        email: localStorage.getItem('userAccount')
       })
     } else {
      res.redirect('/login')
@@ -244,6 +245,7 @@
 
     if (localStorage.getItem('userAccount') != "") {
       res.render('pages/addnote',{
+        email: localStorage.getItem('userAccount')
       });
     } else {
      res.redirect('/login')
