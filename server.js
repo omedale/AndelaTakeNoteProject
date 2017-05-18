@@ -59,7 +59,7 @@
 
   app.get('/', function(req, res) {
     if (localStorage.getItem('userAccount') != "") {
-     res.render('pages/home',{
+     res.render('pages/login',{
        port:port
      });
    } else {
