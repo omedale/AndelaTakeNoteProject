@@ -76,7 +76,8 @@
     note ="";
     if (localStorage.getItem('userAccount') != "") {
      res.render('pages/home',{
-       port:port
+       port:port,
+       email: localStorage.getItem('userAccount')
      });
    } else {
      res.redirect('/login')
