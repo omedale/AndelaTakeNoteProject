@@ -55,30 +55,7 @@
             <!-- user dropdown ends -->
 
 
-            <ul class="collapse navbar-collapse nav navbar-nav top-menu">
-                <li>
-                    <form class="navbar-search pull-left">
-                    <input placeholder="Search note" ng-model="searchText" class="search-query form-control col-md-10"
-                               type="text">
-                    </form>
-                </li>
-            </ul>
 
-
-            <ul class="collapse navbar-collapse nav navbar-nav top-menu">
-                <form class="navbar-search" style="display: inline-flex;">
-                <li>
-
-                    <input placeholder="Search note" ng-model="searchText" class="search-query form-control col-md-10"
-                               type="file">
-
-                </li>
-                <li>
-                     <button class="btn" style="  background-color: #42ace9; color: white;"><i style="font-size:smaller; color: white; padding: 4px;" class="glyphicon glyphicon-download"></i>Upload JSON</button>
-
-                </li>
-                 </form>
-            </ul>
 
 
         </div>
@@ -89,8 +66,24 @@
 <div class="" >
 
     <div class="box col-md-12">
+        <div class="row">
+            <div class="col-sm-6">
+                    <form class="navbar-search pull-left">
+                    <input placeholder="Search note" ng-model="searchText" class="search-query form-control col-md-10"
+                               type="text">
+                    </form>
+            </div>
+             <div class="col-sm-6">
+                <form class="navbar-search" style="display: inline-flex;">
+                   <input placeholder="Search note" ng-model="searchText" class="search-query form-control col-md-10"
+                               type="file">
+                     <button class="btn" style="  background-color: #42ace9; color: white;"><i style="font-size:smaller; color: white; padding: 4px;" class="glyphicon glyphicon-download"></i>Upload JSON</button>
+                 </form>
+            </div>
+
+        </div>
         <div class="innar">
-            <div class="row" id="notecontainer" style="margin-left: 3%;">
+            <div class="row" id="notecontainer">
                 <div class=" col-sm-3" style="    width: inherit;" ng-repeat="note in notes | filter:searchText | orderBy: '-id'">
                   <form method="post" action="/viewnote">
                   <input type="hidden" id="noteid" name="noteid" value="{{note.$id}}">
