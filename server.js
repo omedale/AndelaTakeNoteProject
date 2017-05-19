@@ -1,5 +1,6 @@
 
   var express = require('express');
+  require('dotenv').config();
   var expressValidator = require('express-validator');
   var cookieParser = require('cookie-parser');
   var session      = require('express-session');
@@ -12,15 +13,13 @@
 
   var LocalStorage = require('node-localstorage').LocalStorage;
   var firebase = require('firebase').initializeApp({
-   apiKey: "AIzaSyAqu8jyV5ECKD_Bhd-Be6mbvUYnTZ0cWA0",
-   authDomain: "andela-83b71.firebaseapp.com",
-   databaseURL: "https://andela-83b71.firebaseio.com",
-   projectId: "andela-83b71",
-   storageBucket: "andela-83b71.appspot.com",
-   messagingSenderId: "632055894361"
+   apiKey: process.env.API_KEY,
+   authDomain: process.env.AUTHDOMAIN,
+   databaseURL: process.env.DATABASEURL,
+   projectId: process.env.PROJECTID,
+   storageBucket: process.env.STORAGEBUCKET,
+   messagingSenderId: process.env.MESSAGINSENDERID
   });
-
-
 
   var port = process.env.PORT || 8080;
 

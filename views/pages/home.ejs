@@ -28,12 +28,6 @@
     <div class="navbar navbar-default" role="navigation">
 
         <div class="navbar-inner">
-            <button type="button" class="navbar-toggle pull-left animated flip">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
             <a class="navbar-brand" href="/home">
                 <span>TakeNote</span></a>
 
@@ -55,7 +49,21 @@
             <!-- user dropdown ends -->
 
 
-            <ul class="collapse navbar-collapse nav navbar-nav top-menu">
+
+
+
+        </div>
+    </div>
+    <!-- topbar ends -->
+<div class="ch-container">
+
+    <div class="">
+<div class="" >
+
+    <div class="box col-md-12">
+         <div class="row">
+        <div class="col-sm-6">
+         <ul class=" nav navbar-nav top-menu">
                 <li>
                     <form class="navbar-search pull-left">
                     <input placeholder="Search note" ng-model="searchText" class="search-query form-control col-md-10"
@@ -64,33 +72,18 @@
                 </li>
             </ul>
 
-
-            <ul class="collapse navbar-collapse nav navbar-nav top-menu">
+        </div>
+        <div class="col-sm-6 pull-left">
                 <form class="navbar-search" style="display: inline-flex;">
-                <li>
-
                     <input placeholder="Search note" ng-model="searchText" class="search-query form-control col-md-10"
                                type="file">
-
-                </li>
-                <li>
                      <button class="btn" style="  background-color: #42ace9; color: white;"><i style="font-size:smaller; color: white; padding: 4px;" class="glyphicon glyphicon-download"></i>Upload JSON</button>
-
-                </li>
                  </form>
-            </ul>
-
-
         </div>
-    </div>
-    <!-- topbar ends -->
-<div class="ch-container">
-    <div class="">
-<div class="" >
 
-    <div class="box col-md-12">
+    </div>
         <div class="innar">
-            <div class="row" id="notecontainer" style="margin-left: 3%;">
+            <div class="row" id="notecontainer" style="">
                 <div class=" col-sm-3" style="    width: inherit;" ng-repeat="note in notes | filter:searchText | orderBy: '-id'">
                   <form method="post" action="/viewnote">
                   <input type="hidden" id="noteid" name="noteid" value="{{note.$id}}">
