@@ -83,7 +83,7 @@
 
         </div>
         <div class="innar">
-            <div class="row" id="notecontainer">
+            <div class="row" id="notecontainer" style="    margin-top: 15px;">
                 <div class=" col-sm-3" style="    width: inherit;" ng-repeat="note in notes | filter:searchText | orderBy: '-id'">
                   <form method="post" action="/viewnote">
                   <input type="hidden" id="noteid" name="noteid" value="{{note.$id}}">
