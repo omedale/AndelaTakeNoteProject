@@ -8,6 +8,7 @@ You can add Note
 View list of notes 
 Delete notes 
 Export note as json 
+Search notes
 
 Technology used 
 Node js
@@ -17,7 +18,7 @@ Angularjs
 Javascript 
 
 Installation 
-Clone the the app with ....url
+Clone the the app with https://github.com/omedale/AndelaTakeNoteProject.git
 
 Install dependencies 
 $ npm install 
